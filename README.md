@@ -17,14 +17,31 @@ O **Siltec-Solutions** (SGI) é uma plataforma SaaS moderna de gestão eclesiás
 - **Escalas de Voluntários** — Coordenação de escalalas para cultos e eventos
 - **Dashboard Inteligente** — KPIs estratégicos e alertas automáticos
 
+### Histórico de Versões
+
+- **v0.3** — Nova Identidade Visual (Dark Glassmorphism UI, Material Symbols, Manrope)
+
 ## Stack Tecnológico
 
 | Categoria | Tecnologia |
 |-----------|-------------|
-| Frontend | Next.js 15, React 19, TypeScript |
-| Estilização | Tailwind CSS |
-| Backend | Supabase (PostgreSQL, Auth, Storage) |
+| Frontend | Next.js 15, React 19, TypeScript, Manrope |
+| Ícones | Material Symbols Outlined |
+| Estilização | Tailwind CSS, Dark Glassmorphism UI |
+| Backend | Supabase (PostgreSQL, Auth, Storage, RLS Multi-tenant) |
 | Deploy | Vercel |
+
+## Estrutura de Navegação
+
+O sistema utiliza navegação lateral com as seguintes áreas:
+
+- **Dashboard** — Visão geral com KPIs e alertas
+- **Membros** — Gestão de cadastro e histórico ministerial
+- **Financeiro** — Controle de dízimos, ofertas e relatórios
+- **Eventos** — Agenda, calendário e check-in
+- **Ministérios** — Departamentos e coordenação de líderes
+- **Relatórios** — Análises e exportação de dados
+- **Configurações** — Preferências e administração
 
 ## Getting Started
 

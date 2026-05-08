@@ -5,52 +5,65 @@
 
 ## v1 Requirements
 
-Requirements for milestone v0.1: Design System & Identidade Visual.
+Requirements for milestone v0.2: Membros & Supabase Schema.
 
-### Design Tokens (DTKN)
+### Members (MEMB)
 
-- [ ] **DTKN-01**: Paleta de cores dark theme configurada no Tailwind (background, surface, accent, success, warning, error, text)
-- [ ] **DTKN-02**: Tipografia Inter configurada com fallback system-ui
-- [ ] **DTKN-03**: Espaçamentos, border-radius e sombras padronizados
-- [ ] **DTKN-04**: CSS base global (reset, scrollbar, autofill, animações fadeIn/slideIn)
+- [ ] **MEMB-01**: Tabela `members` com campos completos (nome, birth_date, gender, marital_status, phone, email, endereço)
+- [ ] **MEMB-02**: Campos de batismo e conversão (baptism_date, conversion_date)
+- [ ] **MEMB-03**: Relacionamento com departments via `department_id`
+- [ ] **MEMB-04**: Status ativo/inativo com controle
+- [ ] **MEMB-05**: Timestamps padrão (created_at, updated_at, deleted_at soft delete)
+- [ ] **MEMB-06**: Avatar/photo via Supabase Storage
 
-### Componentes Base (COMP)
+### Family Groups (FMLY)
 
-- [ ] **COMP-01**: Card com variantes (default, elevated, outlined) e StatCard
-- [ ] **COMP-02**: Button com variantes (primary, secondary, ghost, danger) e tamanhos
-- [ ] **COMP-03**: Input com label, erro, ícones e tamanhos
-- [ ] **COMP-04**: Modal com overlay, escape, tamanhos e ModalFooter
-- [ ] **COMP-05**: Table com colunas, loading, empty state e row click
-- [ ] **COMP-06**: Select estilizado com o tema
-- [ ] **COMP-07**: Tabs com variantes
-- [ ] **COMP-08**: Avatar e Badge
+- [ ] **FMLY-01**: Tabela `family_groups` com nome do grupo/família
+- [ ] **FMLY-02**: Tabela `family_members` (relacionamento N:N entre members)
+- [ ] **FMLY-03**: Campo `relationship` (pai, mãe, filho, cônjuge, etc.)
+- [ ] **FMLY-04**: Líder do grupo familiar
 
-### Layout (LYOT)
+### Member Timeline (TIME)
 
-- [ ] **LYOT-01**: Sidebar fixa com logo, navegação com ícones Lucide e seção do usuário
-- [ ] **LYOT-02**: Área de conteúdo principal responsiva
-- [ ] **LYOT-03**: Overlay mobile com hamburger menu e transição animada
-- [ ] **LYOT-04**: Header mobile com toggle de sidebar
+- [ ] **TIME-01**: Tabela `member_timeline` com eventos ministeriais
+- [ ] **TIME-02**: Tipos: cargo, departamento, status, observação
+- [ ] **TIME-03**: Registros de alterações com user e timestamp
 
-### Telas Fundacionais (SCRN)
+### Attendance (ATTD)
 
-- [ ] **SCRN-01**: Shell do Dashboard com KPI cards e seção de atividades recentes
-- [ ] **SCRN-02**: Tela de Login com identidade visual (dark theme, campos estilizados)
-- [ ] **SCRN-03**: Navegação funcional entre rotas (Next.js App Router)
+- [ ] **ATTD-01**: Tabela `member_attendances` para controle de presença
+- [ ] **ATTD-02**: Vinculação a eventos
+- [ ] **ATTD-03**: Status: presente, ausente, justificar
+
+### Roles (ROLE)
+
+- [ ] **ROLE-01**: Enum de cargos alinhado ao RBAC
+- [ ] **ROLE-02**: Tabela `member_roles` para histórico de cargos
+- [ ] **ROLE-03**: Cargos: Member, Leader, Treasurer, Admin, Super Admin
+
+### Multi-Tenant & Security (SECU)
+
+- [ ] **SECU-01**: `church_id` em todas as tabelas
+- [ ] **SECU-02**: RLS policies por church_id
+- [ ] **SECU-03**: Índices para performance
+- [ ] **SECU-04**: Audit columns (created_by, updated_by)
 
 ## v2 Requirements
 
-### Gestão Ministerial
+### Departments
 
-- **MEMB-01**: Cadastro completo de membros
-- **FIN-01**: Gestão financeira básica
+- **DEPT-01**: Tabela de departamentos/ministérios
+- **DEPT-02**: Hierarquia de departamentos
+- **DEPT-03**: Membros por departamento
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Aplicativo Mobile | Deferido para V2 |
-| IA / Chatbots | Fora do escopo do MVP inicial |
+| Migrations de financeiro | v0.3 -Financeiro |
+| Migrations de eventos | v0.4 -Eventos |
+| Migrations de escalas | v1 -Escalas |
+| Mobile app | V2 |
 
 ## Traceability
 
@@ -58,31 +71,35 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DTKN-01 | Phase 1 | Pending |
-| DTKN-02 | Phase 1 | Pending |
-| DTKN-03 | Phase 1 | Pending |
-| DTKN-04 | Phase 1 | Pending |
-| COMP-01 | Phase 2 | Pending |
-| COMP-02 | Phase 2 | Pending |
-| COMP-03 | Phase 2 | Pending |
-| COMP-04 | Phase 2 | Pending |
-| COMP-05 | Phase 2 | Pending |
-| COMP-06 | Phase 2 | Pending |
-| COMP-07 | Phase 2 | Pending |
-| COMP-08 | Phase 2 | Pending |
-| LYOT-01 | Phase 3 | Pending |
-| LYOT-02 | Phase 3 | Pending |
-| LYOT-03 | Phase 3 | Pending |
-| LYOT-04 | Phase 3 | Pending |
-| SCRN-01 | Phase 4 | Pending |
-| SCRN-02 | Phase 4 | Pending |
-| SCRN-03 | Phase 3 | Pending |
+| MEMB-01 | Phase 1 | Pending |
+| MEMB-02 | Phase 1 | Pending |
+| MEMB-03 | Phase 1 | Pending |
+| MEMB-04 | Phase 1 | Pending |
+| MEMB-05 | Phase 1 | Pending |
+| MEMB-06 | Phase 1 | Pending |
+| FMLY-01 | Phase 1 | Pending |
+| FMLY-02 | Phase 1 | Pending |
+| FMLY-03 | Phase 1 | Pending |
+| FMLY-04 | Phase 1 | Pending |
+| TIME-01 | Phase 2 | Pending |
+| TIME-02 | Phase 2 | Pending |
+| TIME-03 | Phase 2 | Pending |
+| ATTD-01 | Phase 2 | Pending |
+| ATTD-02 | Phase 2 | Pending |
+| ATTD-03 | Phase 2 | Pending |
+| ROLE-01 | Phase 2 | Pending |
+| ROLE-02 | Phase 2 | Pending |
+| ROLE-03 | Phase 2 | Pending |
+| SECU-01 | Phase 3 | Pending |
+| SECU-02 | Phase 3 | Pending |
+| SECU-03 | Phase 3 | Pending |
+| SECU-04 | Phase 3 | Pending |
 
 **Coverage:**
-- v1 requirements: 19 total
-- Mapped to phases: 19
+- v1 requirements: 22 total
+- Mapped to phases: 22
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-05-08*
-*Last updated: 2026-05-08 after approval of v0.1 requirements*
+*Last updated: 2026-05-08 after approval of v0.2 requirements*

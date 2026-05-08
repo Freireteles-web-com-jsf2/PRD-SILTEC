@@ -1,10 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
+import { createBrowserClient } from '@supabase/ssr';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://your-project.supabase.co';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'your-anon-key';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-export function getSupabase() {
-  return supabase;
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Configuração do Supabase ausente. Verifique NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY.'
+  );
 }
+
+// createBrowserClient do @supabase/ssr persiste a sessão em cookies
+// compatível com o middleware que usa createServerClient
+export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);

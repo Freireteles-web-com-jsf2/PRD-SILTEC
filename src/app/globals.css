@@ -2,66 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;900&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.3%;
+    --background: 222 47% 5%;
+    --foreground: 220 20% 92%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.3%;
+    --card: 222 47% 8%;
+    --card-foreground: 220 20% 92%;
 
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 262 83% 75%;
+    --primary-foreground: 262 83% 5%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 221 83% 82%;
+    --secondary-foreground: 222 63% 8%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --tertiary: 269 76% 80%;
+    --tertiary-foreground: 269 50% 12%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 222 47% 12%;
+    --muted-foreground: 220 14% 60%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: 222 47% 12%;
+    --accent-foreground: 220 20% 92%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --destructive: 5 85% 64%;
+    --destructive-foreground: 5 100% 97%;
 
-    --radius: 0.5rem;
+    --border: 220 13% 28%;
+    --input: 220 13% 28%;
+    --ring: 262 83% 75%;
+
+    --radius: 0.25rem;
 
     --font-manrope: 'Manrope', system-ui, sans-serif;
-    --font-inter: 'Inter', system-ui, sans-serif;
-  }
 
-  .dark {
-    --background: 222.2 84% 4.3%;
-    --foreground: 210 0% 98%;
+    --surface-container-lowest: 222 59% 4%;
+    --surface-container-low: 222 44% 9%;
+    --surface-container: 222 41% 12%;
+    --surface-container-high: 222 36% 17%;
+    --surface-container-highest: 222 32% 22%;
+    --surface-dim: 222 47% 5%;
+    --surface: 222 47% 5%;
+    --surface-bright: 222 25% 24%;
+    --surface-variant: 222 25% 24%;
+    --outline-variant: 220 10% 30%;
+    --outline: 220 8% 50%;
+    --inverse-surface: 220 20% 92%;
+    --inverse-on-surface: 222 35% 15%;
+    --inverse-primary: 262 83% 40%;
+    --surface-tint: 262 83% 75%;
 
-    --card: 222.2 84% 4.3%;
-    --card-foreground: 210 0% 98%;
+    --primary-fixed: 262 83% 92%;
+    --primary-fixed-dim: 262 83% 75%;
+    --on-primary-fixed: 262 50% 8%;
+    --on-primary-fixed-variant: 262 50% 35%;
+    --on-primary: 262 100% 96%;
+    --on-surface: 220 20% 92%;
+    --on-surface-variant: 220 14% 75%;
+    --on-background: 220 20% 92%;
+    --on-secondary-fixed: 222 100% 96%;
+    --on-secondary-fixed-variant: 222 55% 25%;
+    --on-secondary: 222 100% 25%;
+    --on-secondary-container: 221 83% 92%;
+    --on-tertiary: 269 50% 15%;
+    --on-tertiary-container: 269 100% 95%;
 
-    --primary: 217.2 91.2% 65.3%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 0% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 0% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --tertiary-fixed: 269 76% 95%;
+    --tertiary-fixed-dim: 269 76% 80%;
+    --secondary-container: 222 55% 35%;
+    --secondary-fixed: 222 35% 95%;
+    --secondary-fixed-dim: 221 83% 82%;
+    --tertiary-container: 269 45% 55%;
+    --error-container: 5 100% 92%;
+    --on-error-container: 5 85% 20%;
+    --on-error: 5 100% 97%;
+    --error: 5 85% 84%;
   }
 }
 
@@ -71,18 +88,107 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-manrope), system-ui, sans-serif;
+    background-color: #0b1326;
+    color: #dae2fd;
+  }
+
+  ::selection {
+    background-color: rgba(208, 188, 255, 0.3);
+    color: #dae2fd;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #131b2e;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #494454;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #958ea0;
+  }
+
+  :focus-visible {
+    outline: 2px solid #d0bcff;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
 @layer utilities {
   .glass {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   .glass-card {
-    @apply glass rounded-lg shadow-sm;
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-size: 20px;
+    line-height: 1;
+    vertical-align: middle;
+    user-select: none;
+  }
+
+  .glass-sidebar {
+    background: rgba(23, 31, 51, 0.7);
+    backdrop-filter: blur(24px);
+    border-right: 1px solid rgba(73, 68, 84, 0.2);
+  }
+
+  .glass-topbar {
+    background: rgba(11, 19, 38, 0.4);
+    backdrop-filter: blur(12px);
+  }
+}
+
+@layer components {
+  .font-h1 {
+    font-size: 32px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  .font-h2 {
+    font-size: 24px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+  .font-h3 {
+    font-size: 20px;
+    line-height: 1.4;
+    letter-spacing: 0;
+    font-weight: 600;
+  }
+  .font-body-lg {
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .font-body-md {
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .font-label-sm {
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    text-transform: uppercase;
   }
 }

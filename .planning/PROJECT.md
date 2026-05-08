@@ -8,23 +8,24 @@ Plataforma SaaS moderna de gestão eclesiástica desenvolvida para igrejas, mini
 
 Plataforma de gestão ministerial completa que permite às igrejas brasileiras gerenciar sua administração de forma centralizada, segura e escalável, desde pequenas congregações até grandes ministérios multi-campus.
 
-## Current Milestone: v0.1 Design System & Identidade Visual
+## Current Milestone: v0.2 Membros & Supabase Schema
 
-**Goal:** Estabelecer a fundação visual completa do PRD-SILTEC baseada na identidade do siltec-sgi existente, criando o design system, layout e biblioteca de componentes como alicerce para todas as fases do MVP.
+**Goal:** Criar migrations do banco Supabase para o módulo de membros com estrutura completa.
 
 **Target features:**
-- Design tokens (cores, tipografia, espaçamentos, sombras, border-radius)
-- Sistema de tema escuro com variáveis CSS
-- Layout responsivo (sidebar + área de conteúdo)
-- Biblioteca de componentes base (Card, Button, Input, Modal, Table, Select, Tabs, Avatar, Badge)
-- Shell do Dashboard com navegação funcional
-- Tela de Login com a identidade visual
-- Animações e micro-interações (fadeIn, slideIn, transitions)
+- Tabela `members` (cadastro completo, endereço, contatos, estado civil, batismo, conversão)
+- Relacionamento família/grupo (`family_groups`, `family_members`)
+- Timeline ministerial (histórico de alterações)
+- Controle de presença (`member_attendances`)
+- Cargos alinhados ao RBAC (Member, Leader, Treasurer, Admin, Super Admin)
+- Multi-tenant via `church_id` em todas as tabelas
+- RLS policies para segurança por igreja
 
-**Identidade Visual de Referência (siltec-sgi):**
-- Background: `#0f172a` | Surface: `#1e293b` | Accent: `#8b5cf6`
-- Fonte: Inter | Ícones: Lucide React
-- Layout: Sidebar fixa 256px + conteúdo principal
+**Key context:**
+- PRD define modelo de dados completo
+- Stack: Supabase + PostgreSQL
+- Multi-tenant obrigatório (church_id)
+- RBAC já definido: Member, Leader, Treasurer, Admin, Super Admin
 
 ---
 

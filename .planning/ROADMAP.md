@@ -6,94 +6,79 @@
 
 ---
 
-## Visão Geral: Milestone v0.1
+## Visão Geral: Milestone v0.2
 
 | Metric | Value |
 |--------|-------|
-| **Phases** | 4 |
-| **Requirements** | 19 |
+| **Phases** | 3 |
+| **Requirements** | 22 |
 | **Coverage** | 100% |
 
 ---
 
-## Fase 1: Design Tokens & Fundação CSS
+## Fase 1: Schema Base - Members & Families
 
-**Goal:** Configurar a paleta de cores, tipografia e estilos globais baseados no siltec-sgi.
+**Goal:** Criar migrations das tabelas principais: members, family_groups, family_members
 
-**Mode:** development
+**Mode:** database
 
 **Success Criteria:**
-1. Tailwind config atualizado com as cores do siltec-sgi.
-2. Fonte Inter carregada e aplicada globalmente.
-3. CSS global inclui resets, estilos de scrollbar e animações (fade-in, slide-in).
-4. Variáveis de cores acessíveis via CSS e Tailwind.
+1. Tabela `members` criada com todos os campos do PRD
+2. Tabela `family_groups` criada
+3. Tabela `family_members` criada com relacionamento N:N
+4. Índices básicos criados para church_id
+5. Seed data opcional para testes
 
-**Requirements:** DTKN-01, DTKN-02, DTKN-03, DTKN-04
+**Requirements:** MEMB-01, MEMB-02, MEMB-03, MEMB-04, MEMB-05, MEMB-06, FMLY-01, FMLY-02, FMLY-03, FMLY-04
 
 ---
 
-## Fase 2: Componentes Base de UI
+## Fase 2: Timeline, Attendance & Roles
 
-**Goal:** Implementar os componentes de interface fundamentais como alicerce para as telas.
+**Goal:** Criar migrations das tabelas complementares: timeline, attendances, roles
 
-**Mode:** development
+**Mode:** database
 
 **Success Criteria:**
-1. Componentes Card e StatCard funcionais e estilizados.
-2. Componentes Button e Input com todas as variantes e estados.
-3. Modal funcional com suporte a escape e overlay.
-4. Componentes Table e Select prontos para uso com dados.
-5. Avatar, Badge e Tabs implementados conforme a referência.
+1. Tabela `member_timeline` criada com eventos ministeriais
+2. Tabela `member_attendances` criada com vínculo a eventos
+3. Enum de cargos criado
+4. Tabela `member_roles` criada para histórico
+5. Índices para queries frequentes
 
-**Requirements:** COMP-01, COMP-02, COMP-03, COMP-04, COMP-05, COMP-06, COMP-07, COMP-08
+**Requirements:** TIME-01, TIME-02, TIME-03, ATTD-01, ATTD-02, ATTD-03, ROLE-01, ROLE-02, ROLE-03
 
 ---
 
-## Fase 3: Layout e Navegação
+## Fase 3: Multi-Tenant & RLS Policies
 
-**Goal:** Criar a estrutura de layout (Sidebar, Content Area) e navegação responsiva.
+**Goal:** Implementar segurança multi-tenant com RLS policies em todas as tabelas
 
-**Mode:** development
-
-**Success Criteria:**
-1. Sidebar fixa funcional com navegação por ícones Lucide.
-2. Layout principal (Shell) com área de conteúdo responsiva.
-3. Menu mobile (hamburger) funcional com overlay e transições.
-4. Navegação entre rotas operando via Next.js App Router.
-
-**Requirements:** LYOT-01, LYOT-02, LYOT-03, LYOT-04, SCRN-03
-
----
-
-## Fase 4: Telas Fundacionais (Login & Shell)
-
-**Goal:** Implementar as telas iniciais de Login e o Shell funcional do Dashboard.
-
-**Mode:** development
+**Mode:** database
 
 **Success Criteria:**
-1. Tela de Login implementada com a nova identidade visual.
-2. Shell do Dashboard exibe KPI cards e área de atividades vazia.
-3. Fluxo visual de navegação entre Login e Dashboard simulado/funcional.
+1. RLS habilitado em todas as tabelas
+2. Policies para SELECT baseadas em church_id
+3. Policies para INSERT/UPDATE/DELETE
+4. Policies para audit (created_by, updated_by)
+5. Função helper para get_current_church_id()
+6. Testes de policies
 
-**Requirements:** SCRN-01, SCRN-02
+**Requirements:** SECU-01, SECU-02, SECU-03, SECU-04
 
 ---
 
 ## Order of Operations
 
-### Fase 1 → Design Tokens & Fundação CSS
+### Fase 1 → Schema Base - Members & Families
 **Dependencies:** Nenhuma
 
-### Fase 2 → Componentes Base de UI
+### Fase 2 → Timeline, Attendance & Roles
 **Depends on:** Fase 1
 
-### Fase 3 → Layout e Navegação
+### Fase 3 → Multi-Tenant & RLS Policies
 **Depends on:** Fase 1, Fase 2
-
-### Fase 4 → Telas Fundacionais (Login & Shell)
-**Depends on:** Fase 1, Fase 2, Fase 3
 
 ---
 *Roadmap created: 2026-05-08*
-*Milestone: v0.1 Design System & Identidade Visual*
+*Milestone: v0.2 Membros & Supabase Schema*

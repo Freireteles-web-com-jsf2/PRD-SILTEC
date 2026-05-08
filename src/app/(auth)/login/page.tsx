@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Church, Loader2, Mail, Lock, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
 
 const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -34,33 +34,40 @@ export default function LoginPage() {
     setIsLoading(true);
     setError(null);
 
-    const { error: authError } = await signIn(data.email, data.password);
+    try {
+      const result = await signIn(data.email, data.password);
 
-    if (authError) {
-      setError(authError.message);
+      if (result.error) {
+        setError(result.error.message === 'Invalid login credentials'
+          ? 'E-mail ou senha inválidos'
+          : result.error.message);
+        setIsLoading(false);
+        return;
+      }
+
+      window.location.href = '/dashboard';
+    } catch (err: any) {
+      setError('Ocorreu um erro inesperado. Tente novamente.');
       setIsLoading(false);
-      return;
     }
-
-    router.push('/dashboard');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl shadow-lg shadow-blue-600/20 mb-4">
-            <Church className="w-8 h-8 text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-xl mb-4">
+            <span className="material-symbols-outlined text-on-primary text-3xl">church</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Siltec-Solutions</h1>
-          <p className="text-gray-500 mt-1">Sistema de Gestão Integrada</p>
+          <h1 className="font-h1 text-h1 text-primary">SGI Master</h1>
+          <p className="font-body-lg text-on-surface-variant mt-1">Sistema de Gestão Integrada</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 p-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Entrar</h2>
+        <div className="glass-card rounded-xl p-8">
+          <h2 className="font-h2 text-h2 text-on-surface mb-6">Entrar</h2>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700 text-sm">
+            <div className="mb-4 p-3 bg-error/10 border border-error/30 rounded-lg flex items-center gap-2 text-error font-body-md">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               {error}
             </div>
@@ -68,40 +75,40 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block font-label-sm text-on-surface-variant mb-1">
                 E-mail
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">mail</span>
                 <input
                   {...register('email')}
                   type="email"
                   id="email"
                   placeholder="seu@email.com"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition"
+                  className="w-full pl-12 pr-4 py-3 bg-surface-container-low border border-border rounded-lg focus:ring-2 focus:ring-primary/50 text-on-surface placeholder:text-on-surface-variant/50 outline-none transition"
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-error">{errors.email.message}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="password" className="block font-label-sm text-on-surface-variant mb-1">
                 Senha
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">lock</span>
                 <input
                   {...register('password')}
                   type="password"
                   id="password"
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition"
+                  className="w-full pl-12 pr-4 py-3 bg-surface-container-low border border-border rounded-lg focus:ring-2 focus:ring-primary/50 text-on-surface placeholder:text-on-surface-variant/50 outline-none transition"
                 />
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                <p className="mt-1 text-sm text-error">{errors.password.message}</p>
               )}
             </div>
 
@@ -109,13 +116,13 @@ export default function LoginPage() {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-600"
+                  className="w-4 h-4 text-primary border-border rounded focus:ring-primary bg-surface-container-low"
                 />
-                <span className="text-sm text-gray-600">Lembrar-me</span>
+                <span className="font-body-md text-on-surface-variant">Lembrar-me</span>
               </label>
               <Link
                 href="/forgot-password"
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                className="font-body-md text-primary hover:text-primary-fixed transition-colors"
               >
                 Esqueceu a senha?
               </Link>
@@ -124,7 +131,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg shadow-blue-600/20 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 bg-primary text-on-primary font-bold rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 active:scale-95"
             >
               {isLoading ? (
                 <>
@@ -137,17 +144,17 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-gray-200 text-center">
-            <p className="text-sm text-gray-500">
-              Precisa de acesso?{' '}
-              <span className="text-blue-600 font-medium">
-                Solicite ao administrador
-              </span>
+          <div className="mt-6 pt-6 border-t border-outline-variant/10 text-center">
+            <p className="font-body-md text-on-surface-variant">
+              Não tem uma conta?{' '}
+              <Link href="/register" className="text-primary font-semibold hover:text-primary-fixed transition-colors">
+                Criar conta
+              </Link>
             </p>
           </div>
         </div>
 
-        <p className="text-center text-sm text-gray-400 mt-6">
+        <p className="text-center font-label-sm text-on-surface-variant mt-6">
           © 2026 Siltec-Solutions. Todos os direitos reservados.
         </p>
       </div>
