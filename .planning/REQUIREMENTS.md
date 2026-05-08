@@ -58,30 +58,30 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DTKN-01 | Pending | Pending |
-| DTKN-02 | Pending | Pending |
-| DTKN-03 | Pending | Pending |
-| DTKN-04 | Pending | Pending |
-| COMP-01 | Pending | Pending |
-| COMP-02 | Pending | Pending |
-| COMP-03 | Pending | Pending |
-| COMP-04 | Pending | Pending |
-| COMP-05 | Pending | Pending |
-| COMP-06 | Pending | Pending |
-| COMP-07 | Pending | Pending |
-| COMP-08 | Pending | Pending |
-| LYOT-01 | Pending | Pending |
-| LYOT-02 | Pending | Pending |
-| LYOT-03 | Pending | Pending |
-| LYOT-04 | Pending | Pending |
-| SCRN-01 | Pending | Pending |
-| SCRN-02 | Pending | Pending |
-| SCRN-03 | Pending | Pending |
+| DTKN-01 | Phase 1 | Pending |
+| DTKN-02 | Phase 1 | Pending |
+| DTKN-03 | Phase 1 | Pending |
+| DTKN-04 | Phase 1 | Pending |
+| COMP-01 | Phase 2 | Pending |
+| COMP-02 | Phase 2 | Pending |
+| COMP-03 | Phase 2 | Pending |
+| COMP-04 | Phase 2 | Pending |
+| COMP-05 | Phase 2 | Pending |
+| COMP-06 | Phase 2 | Pending |
+| COMP-07 | Phase 2 | Pending |
+| COMP-08 | Phase 2 | Pending |
+| LYOT-01 | Phase 3 | Pending |
+| LYOT-02 | Phase 3 | Pending |
+| LYOT-03 | Phase 3 | Pending |
+| LYOT-04 | Phase 3 | Pending |
+| SCRN-01 | Phase 4 | Pending |
+| SCRN-02 | Phase 4 | Pending |
+| SCRN-03 | Phase 3 | Pending |
 
 **Coverage:**
 - v1 requirements: 19 total
-- Mapped to phases: 0
-- Unmapped: 19 ⚠️
+- Mapped to phases: 19
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-05-08*
