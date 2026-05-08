@@ -11,16 +11,16 @@
 See: .planning/PROJECT.md (updated 2026-05-08)
 
 **Core value:** Plataforma de gestão ministerial completa que permite às igrejas brasileiras gerenciar sua administração de forma centralizada, segura e escalável
-**Current focus:** Milestone v0.2 — Membros & Supabase Schema (COMPLETE)
+**Current focus:** Milestone v0.3 — Financeiro & API (Em planejamento)
 
 ---
 
 ## Current Position
 
-Phase: 3 (Complete)
+Phase: —
 Plan: —
-Status: Milestone Complete
-Last activity: 2026-05-08 — All phases completed
+Status: Milestone v0.2 Complete, v0.3 em planejamento
+Last activity: 2026-05-08 — Milestone v0.2 completado
 
 ---
 
@@ -70,10 +70,9 @@ Last activity: 2026-05-08 — All phases completed
 Nenhum blocker identificado
 
 ### Todos
-- [x] Fase 1: Schema Base - COMPLETE
-- [x] Fase 2: Timeline, Attendance & Roles - COMPLETE
-- [x] Fase 3: RLS Policies - COMPLETE
-- [ ] Aplicar migrations no Supabase (comando manual)
+- [x] v0.2 Membros & Supabase Schema - COMPLETE
+- [x] v0.3.1 Membros Interface (Fase 4) - COMPLETE
+- [ ] Planejar v0.3: Financeiro & API
 
 ---
 

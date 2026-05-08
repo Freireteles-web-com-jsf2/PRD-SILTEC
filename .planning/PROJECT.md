@@ -8,24 +8,32 @@ Plataforma SaaS moderna de gestão eclesiástica desenvolvida para igrejas, mini
 
 Plataforma de gestão ministerial completa que permite às igrejas brasileiras gerenciar sua administração de forma centralizada, segura e escalável, desde pequenas congregações até grandes ministérios multi-campus.
 
-## Current Milestone: v0.2 Membros & Supabase Schema
+## Current Milestone: v0.3 — Financeiro & API
 
-**Goal:** Criar migrations do banco Supabase para o módulo de membros com estrutura completa.
+**Goal:** Implementar módulo financeiro com entradas/saídas, e API REST para integração.
 
-**Target features:**
-- Tabela `members` (cadastro completo, endereço, contatos, estado civil, batismo, conversão)
+**Status:** Em planejamento
+
+---
+
+<details>
+<summary>Histórico: v0.2 Membros & Supabase Schema (COMPLETO)</summary>
+
+**Concluído em:** 2026-05-08
+
+**Entregas:**
+- Tabela `members` com campos completos
 - Relacionamento família/grupo (`family_groups`, `family_members`)
-- Timeline ministerial (histórico de alterações)
+- Timeline ministerial (`member_timeline`)
 - Controle de presença (`member_attendances`)
-- Cargos alinhados ao RBAC (Member, Leader, Treasurer, Admin, Super Admin)
+- Cargos RBAC (Member, Leader, Treasurer, Admin, Super Admin)
 - Multi-tenant via `church_id` em todas as tabelas
 - RLS policies para segurança por igreja
+- Triggers de auditoria (17 triggers em 7 tabelas)
 
-**Key context:**
-- PRD define modelo de dados completo
-- Stack: Supabase + PostgreSQL
-- Multi-tenant obrigatório (church_id)
-- RBAC já definido: Member, Leader, Treasurer, Admin, Super Admin
+**Migrations aplicadas:** 12 arquivos SQL no Supabase
+
+</details>
 
 ---
 

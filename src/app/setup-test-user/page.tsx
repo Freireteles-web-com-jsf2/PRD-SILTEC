@@ -40,6 +40,7 @@ export default function SetupTestUserPage() {
         options: {
           data: {
             name: 'Admin Siltec',
+            church_id: '00000000-0000-0000-0000-000000000001'
           },
         }
       });
@@ -115,6 +116,29 @@ export default function SetupTestUserPage() {
     setLoading(false);
   };
 
+  const updateMetadata = async () => {
+    setLoading(true);
+    setStatus('Atualizando metadados do usuário atual...\n');
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        data: { church_id: '00000000-0000-0000-0000-000000000001' }
+      });
+      if (error) throw error;
+      setStatus(prev => prev + `✅ Metadados atualizados!\n`);
+      setStatus(prev => prev + `Church ID definido como: 00000000-0000-0000-0000-000000000000\n\n`);
+
+      // Refresh session to get new JWT with church_id
+      setStatus(prev => prev + `Atualizando sessão para gerar novo JWT...\n`);
+      const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+      if (refreshError) throw refreshError;
+      setStatus(prev => prev + `✅ Sessão atualizada! Novo JWT gerado com church_id.\n\n`);
+      setStatus(prev => prev + `Agora tente acessar /membros/novo novamente.\n`);
+    } catch (err: any) {
+      setStatus(prev => prev + `❌ Erro ao atualizar: ${err.message}\n`);
+    }
+    setLoading(false);
+  };
+
   const checkSupabaseConfig = () => {
     setStatus('Verificando configuração do Supabase...\n\n');
     
@@ -158,6 +182,13 @@ export default function SetupTestUserPage() {
               className="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg disabled:opacity-50"
             >
               3. Criar/Testar Usuário admin@siltec.com
+            </button>
+            <button
+              onClick={updateMetadata}
+              disabled={loading}
+              className="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg disabled:opacity-50"
+            >
+              4. Sincronizar Church ID (Nil UUID)
             </button>
           </div>
         </div>
