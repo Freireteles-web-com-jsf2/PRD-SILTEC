@@ -1,0 +1,10 @@
+{
+  "permission": {
+    "read": {
+      "D:/PRD-SILTEC/.opencode/get-shit-done/*": "allow"
+    },
+    "external_directory": {
+      "D:/PRD-SILTEC/.opencode/get-shit-done/*": "allow"
+    }
+  }
+}
