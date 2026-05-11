@@ -1,4 +1,8 @@
 {
+  "fileSuggestion": {
+    "type": "command",
+    "command": "find .claude/commands -type f -name '*.md' | sed 's|^./||'"
+  },
   "hooks": {
     "SessionStart": [
       {
