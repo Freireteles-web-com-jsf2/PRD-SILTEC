@@ -1,6 +1,6 @@
 # State: Siltec-Solutions | SGI
 
-**Updated:** 2026-05-10
+**Updated:** 2026-05-12
 **Project:** Siltec-Solutions | SGI
 **Core Value:** Plataforma de gestão ministerial completa que permite às igrejas brasileiras gerenciar sua administração de forma centralizada, segura e escalável
 
@@ -11,16 +11,16 @@
 See: .planning/PROJECT.md (updated 2026-05-08)
 
 **Core value:** Plataforma de gestão ministerial completa que permite às igrejas brasileiras gerenciar sua administração de forma centralizada, segura e escalável
-**Current focus:** Milestone v0.3 — Financeiro & API (Em planejamento)
+**Current focus:** Milestone v0.3 — Módulo Membros Completo (Fase 6 em discussão)
 
 ---
 
 ## Current Position
 
-Phase: —
+Phase: 6
 Plan: —
-Status: Codebase mapping completo, pronto para planejar v0.3
-Last activity: 2026-05-10 — Mapeamento completo do código com GSD framework
+Status: Contexto da Fase 6 capturado, pronto para planejar
+Last activity: 2026-05-12 — Discussão da Fase 6 concluída, CONTEXT.md criado
 
 ---
 
@@ -30,6 +30,7 @@ Last activity: 2026-05-10 — Mapeamento completo do código com GSD framework
 |-----------|--------|--------|------------|
 | v0.1 Design System | Completed | 4 | 100% |
 | v0.2 Membros & Supabase | COMPLETE | 3 | 100% |
+| v0.3 Módulo Membros Completo | Em andamento | 6 (1-5 ✓, 6 em discussão) | 83% |
 
 ---
 
@@ -54,6 +55,22 @@ Last activity: 2026-05-10 — Mapeamento completo do código com GSD framework
 - Migration 10: members RLS policies ✓
 - Migration 11: related tables RLS policies ✓
 - Migration 12: audit triggers ✓
+
+### Phase 4: Members UI ✓
+- List, create, profile, edit pages
+- Search, filters, family, roles, attendance
+
+### Phase 5: Rebuild Members ✓
+- Types/Services alinhados ao schema
+- React Query migration
+- Formulário completo (departamento, family_relationship, role_end_date)
+- Perfil com dados reais (timeline, presença)
+
+### Phase 6: CRUD Tabelas Relacionadas (Em discussão)
+- family_groups CRUD
+- departments CRUD
+- events CRUD + presença integrada
+- cargos/timeline global
 
 ---
 
@@ -86,11 +103,13 @@ Nenhum blocker identificado
 - [x] v0.2 Membros & Supabase Schema - COMPLETE
 - [x] v0.3.1 Membros Interface (Fase 4) - COMPLETE
 - [x] Mapear código existente com GSD framework - COMPLETE
-- [ ] Planejar v0.3: Financeiro & API
+- [x] Fase 6: Contexto capturado
+- [ ] Planejar Fase 6: CRUD tabelas relacionadas
+- [ ] Planejar v0.4: Financeiro & API
 
 ### Próximos Passos Sugeridos
-1. `/gsd-plan-phase` - Planejar próxima fase (v0.3 - Financeiro & API)
-2. `/gsd-execute-phase` - Executar fase já planejada
+1. `/gsd-plan-phase 6` — Planejar Fase 6 (CRUD tabelas relacionadas)
+2. `/gsd-execute-phase 6` — Executar fase planejada
 3. Implementar testes (prioridade alta conforme CONCERNS.md)
 4. Remover páginas de debug antes de produção
 
