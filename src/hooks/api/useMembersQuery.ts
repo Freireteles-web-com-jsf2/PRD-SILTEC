@@ -38,12 +38,11 @@ export function useMembers({
       return { members: [], total: 0 };
     }
 
-    let query = supabase
+      let query = supabase
       .from('members')
       .select(`
         *,
-        member_roles(role, is_active),
-        departments(name)
+        member_roles(role, is_active)
       `, { count: 'exact' })
       .is('deleted_at', null);
 
@@ -206,8 +205,7 @@ export function useMember(id: string) {
         member_attendances(
           id, event_id, status, check_in_time, check_out_time, created_at,
           events(title, start_date, event_type)
-        ),
-        departments(name)
+        )
       `)
       .eq('id', id)
       .is('deleted_at', null)
