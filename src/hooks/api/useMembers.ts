@@ -88,9 +88,10 @@ export function useMembers({ search, status, departmentId, page = 1, pageSize = 
       clearTimeout(debounceRef.current);
     }
 
+    const debounceDelay = search && search.trim() ? DEBOUNCE_MS : 0;
     debounceRef.current = setTimeout(() => {
       fetchMembers();
-    }, search !== undefined ? DEBOUNCE_MS : 0);
+    }, debounceDelay);
 
     return () => {
       mountedRef.current = false;
