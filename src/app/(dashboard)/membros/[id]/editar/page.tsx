@@ -362,7 +362,6 @@ export default function EditMemberPage() {
                     <option value="leader">Líder</option>
                     <option value="treasurer">Tesoureiro</option>
                     <option value="admin">Administrador</option>
-                    <option value="super_admin">Super Admin</option>
                   </select>
                 </div>
               </div>
