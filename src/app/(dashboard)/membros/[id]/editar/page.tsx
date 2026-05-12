@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { memberSchema, MemberFormData } from '@/types/memberSchema';
-import { useMember } from '@/hooks/api/useMember';
+import { useMember, useUpdateMember } from '@/hooks/api/useMembersQuery';
 import { useFamilyGroups } from '@/hooks/api/useFamilyGroups';
 import { supabase } from '@/lib/supabase';
 import { Card } from '@/components/ui/Card';
@@ -17,7 +17,8 @@ import {
   Plus,
   Award,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Building2
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -53,11 +54,14 @@ export default function EditMemberPage() {
         address_state: member.address_state || '',
         baptism_date: member.baptism_date || '',
         conversion_date: member.conversion_date || '',
+        department_id: member.department_id || '',
         status: member.status,
         family_group_id: member.family_members?.[0]?.family_groups?.id || '',
+        family_relationship: member.family_members?.[0]?.relationship || undefined,
         new_family_group_name: '',
-        role: member.member_roles?.find(r => r.is_active)?.role || '',
-        role_start_date: member.member_roles?.find(r => r.is_active)?.start_date?.split('T')[0] || '',
+        role: member.member_roles?.find(r => r.is_active)?.role || undefined,
+        role_start_date: member.member_roles?.find(r => r.is_active)?.start_date?.split('T')[0] || undefined,
+        role_end_date: member.member_roles?.find(r => r.is_active)?.end_date?.split('T')[0] || undefined,
       });
     }
   }, [member, reset]);
@@ -74,7 +78,7 @@ export default function EditMemberPage() {
         familyGroupId = newGroup.id;
       }
 
-      const { new_family_group_name, family_group_id, role, role_start_date, ...memberData } = data;
+      const { new_family_group_name, family_group_id, family_relationship, role, role_start_date, role_end_date, ...memberData } = data;
 
       const { error: updateError } = await supabase
         .from('members')
@@ -95,13 +99,13 @@ export default function EditMemberPage() {
         if (existing) {
           const { error: updateError } = await supabase
             .from('family_members')
-            .update({ family_group_id: familyGroupId })
+            .update({ family_group_id: familyGroupId, relationship: family_relationship || 'other' })
             .eq('id', existing.id);
           if (updateError) throw updateError;
         } else {
           const { error: insertError } = await supabase
             .from('family_members')
-            .insert([{ member_id: id, family_group_id: familyGroupId, relationship: 'membro' }]);
+            .insert([{ member_id: id, family_group_id: familyGroupId, relationship: family_relationship || 'other' }]);
           if (insertError) throw insertError;
         }
       }
@@ -111,7 +115,7 @@ export default function EditMemberPage() {
         if (activeRole) {
           const { error: roleUpdateError } = await supabase
             .from('member_roles')
-            .update({ role, start_date: role_start_date || activeRole.start_date })
+            .update({ role, start_date: role_start_date || activeRole.start_date, end_date: role_end_date || null })
             .eq('id', activeRole.id);
           if (roleUpdateError) throw roleUpdateError;
         } else {
@@ -122,6 +126,7 @@ export default function EditMemberPage() {
               role,
               is_active: true,
               start_date: role_start_date || new Date().toISOString().split('T')[0],
+              end_date: role_end_date || null,
             }]);
           if (roleInsertError) throw roleInsertError;
         }
@@ -296,6 +301,18 @@ export default function EditMemberPage() {
                   className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
                 />
               </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant">Departamento</label>
+                <select
+                  {...register('department_id')}
+                  className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
+                >
+                  <option value="">Nenhum departamento</option>
+                  <option value="admin">Administrativo</option>
+                  <option value="music">Música</option>
+                  <option value="youth">Juventude</option>
+                </select>
+              </div>
             </div>
           </Card>
         </div>
@@ -346,6 +363,25 @@ export default function EditMemberPage() {
                   />
                 </div>
               )}
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant">Relação Familiar</label>
+                <select
+                  {...register('family_relationship')}
+                  className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
+                >
+                  <option value="husband">Marido</option>
+                  <option value="wife">Esposa</option>
+                  <option value="son">Filho</option>
+                  <option value="daughter">Filha</option>
+                  <option value="father">Pai</option>
+                  <option value="mother">Mãe</option>
+                  <option value="brother">Irmão</option>
+                  <option value="sister">Irmã</option>
+                  <option value="grandfather">Avô</option>
+                  <option value="grandmother">Avó</option>
+                  <option value="other">Outro</option>
+                </select>
+              </div>
               <p className="font-body-md text-on-surface-variant italic">
                 {showNewFamily 
                   ? "Um novo grupo familiar será criado e este membro será vinculado como participante."
@@ -376,6 +412,14 @@ export default function EditMemberPage() {
                 <input 
                   type="date"
                   {...register('role_start_date')}
+                  className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
+                />
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant">Data de Fim (opcional)</label>
+                <input 
+                  type="date"
+                  {...register('role_end_date')}
                   className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
                 />
               </div>

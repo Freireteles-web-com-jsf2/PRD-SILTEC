@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useMembers } from '@/hooks/api/useMembers';
+import { useMembers } from '@/hooks/api/useMembersQuery';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { 
@@ -140,7 +140,7 @@ export default function MembersPage() {
                         <Badge variant="secondary">
                           {member.member_roles?.find(r => r.is_active)?.role || 'Membro'}
                         </Badge>
-                        <p className="text-label-sm text-on-surface-variant px-xs">Geral</p>
+                        <p className="text-label-sm text-on-surface-variant px-xs">{member.departments?.name || 'Geral'}</p>
                       </div>
                     </td>
                     <td className="px-lg py-md">

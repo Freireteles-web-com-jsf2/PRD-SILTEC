@@ -42,7 +42,8 @@ export function useMembers({
       .from('members')
       .select(`
         *,
-        member_roles(role, is_active)
+        member_roles(role, is_active),
+        departments(name)
       `, { count: 'exact' })
       .is('deleted_at', null);
 
@@ -196,9 +197,17 @@ export function useMember(id: string) {
       .from('members')
       .select(`
         *,
-        member_roles(role, is_active),
+        member_roles(id, role, is_active, start_date, end_date, department_id, granted_by),
         member_timeline(*),
-        family_members(*)
+        family_members(
+          id, relationship, is_primary_contact, notes,
+          family_groups(id, name)
+        ),
+        member_attendances(
+          id, event_id, status, check_in_time, check_out_time, created_at,
+          events(title, start_date, event_type)
+        ),
+        departments(name)
       `)
       .eq('id', id)
       .is('deleted_at', null)

@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useMember } from '@/hooks/api/useMember';
+import { useMember } from '@/hooks/api/useMembersQuery';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { 
@@ -16,7 +16,8 @@ import {
   Award,
   ChevronRight,
   ShieldCheck,
-  Loader2
+  Loader2,
+  Building2
 } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -139,7 +140,7 @@ export default function MemberProfilePage() {
                    {member.baptism_date ? format(new Date(member.baptism_date), 'dd MMM yyyy', { locale: ptBR }) : '-'}
                 </span>
               </div>
-              <div className="pt-md border-t border-outline-variant/10">
+              <div className="pt-md border-t border-outline-variant/10 space-y-md">
                 <div className="flex items-center gap-sm text-on-surface-variant mb-sm">
                    <Users size={18} />
                    <span className="font-body-md">Família</span>
@@ -148,13 +149,20 @@ export default function MemberProfilePage() {
                   <div className="bg-surface-variant/20 p-md rounded-lg flex items-center justify-between">
                      <div>
                        <p className="font-body-md font-bold text-on-surface">{family.family_groups?.name}</p>
-                       <p className="text-label-sm text-on-surface-variant">{family.relationship}</p>
+                       <p className="text-label-sm text-on-surface-variant capitalize">{family.relationship}</p>
                      </div>
                      <ChevronRight size={16} className="text-on-surface-variant" />
                   </div>
                 ) : (
                   <p className="font-body-md text-on-surface-variant italic">Sem vínculo familiar</p>
                 )}
+                <div className="flex items-center gap-sm text-on-surface-variant mb-sm">
+                   <Building2 size={18} />
+                   <span className="font-body-md">Departamento</span>
+                </div>
+                <p className="font-body-md text-on-surface ml-sm">
+                  {member.departments?.name || 'Sem departamento'}
+                </p>
               </div>
             </div>
           </Card>
@@ -168,8 +176,8 @@ export default function MemberProfilePage() {
             headerAction={<History size={20} className="text-primary/50" />}
           >
             <div className="relative pl-lg border-l-2 border-outline-variant/20 space-y-xl py-md">
-              {member.member_timeline?.length > 0 ? (
-                member.member_timeline.map((item) => (
+              {(member.member_timeline?.length ?? 0) > 0 ? (
+                member.member_timeline!.map((item) => (
                   <div key={item.id} className="relative">
                     <div className="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-primary ring-4 ring-background" />
                     <div>
@@ -209,7 +217,10 @@ export default function MemberProfilePage() {
                       </div>
                       <div>
                         <p className="font-body-md font-bold text-on-surface">{role.role}</p>
-                        <p className="text-label-sm text-on-surface-variant">Desde {format(new Date(role.start_date), 'dd/MM/yy')}</p>
+                        <p className="text-label-sm text-on-surface-variant">
+                          Desde {format(new Date(role.start_date), 'dd/MM/yy')}
+                          {role.end_date && <> · até {format(new Date(role.end_date), 'dd/MM/yy')}</>}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -219,11 +230,22 @@ export default function MemberProfilePage() {
             <Card title="Presença em Eventos">
                <div className="flex flex-col items-center justify-center py-xl text-center space-y-md">
                   <div className="w-20 h-20 rounded-full border-4 border-secondary/20 flex items-center justify-center">
-                    <span className="text-h2 text-secondary">85%</span>
+                    <span className="text-h2 text-secondary">
+                      {member.member_attendances && member.member_attendances.length > 0
+                        ? Math.round((member.member_attendances.filter(a => a.status === 'present').length / member.member_attendances.length) * 100)
+                        : '-'}
+                      {member.member_attendances && member.member_attendances.length > 0 ? '%' : ''}
+                    </span>
                   </div>
                   <div>
-                    <p className="font-body-md text-on-surface">Frequência Excelente</p>
-                    <p className="text-label-sm text-on-surface-variant">Últimos 30 dias</p>
+                    <p className="font-body-md text-on-surface">
+                      {member.member_attendances && member.member_attendances.length > 0
+                        ? 'Frequência Registrada'
+                        : 'Sem registros'}
+                    </p>
+                    <p className="text-label-sm text-on-surface-variant">
+                      {member.member_attendances?.length || 0} evento(s)
+                    </p>
                   </div>
                </div>
             </Card>

@@ -46,7 +46,7 @@ export default function NewMemberPage() {
         familyGroupId = newGroup.id;
       }
 
-      const { new_family_group_name, family_group_id, role, role_start_date, ...memberData } = data;
+      const { new_family_group_name, family_group_id, family_relationship, role, role_start_date, role_end_date, ...memberData } = data;
 
       const { data: member, error } = await supabase
         .from('members')
@@ -62,7 +62,7 @@ export default function NewMemberPage() {
           .insert([{ 
             member_id: member.id, 
             family_group_id: familyGroupId,
-            relationship: 'membro' 
+            relationship: family_relationship || 'other',
           }]);
 
         if (familyError) throw familyError;
@@ -76,6 +76,7 @@ export default function NewMemberPage() {
             role,
             is_active: true,
             start_date: role_start_date || new Date().toISOString().split('T')[0],
+            end_date: role_end_date || null,
           }]);
 
         if (roleError) throw roleError;
@@ -229,6 +230,18 @@ export default function NewMemberPage() {
                   className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
                 />
               </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant">Departamento</label>
+                <select
+                  {...register('department_id')}
+                  className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
+                >
+                  <option value="">Nenhum departamento</option>
+                  <option value="admin">Administrativo</option>
+                  <option value="music">Música</option>
+                  <option value="youth">Juventude</option>
+                </select>
+              </div>
             </div>
           </Card>
         </div>
@@ -281,6 +294,19 @@ export default function NewMemberPage() {
                   />
                 </div>
               )}
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant">Relação Familiar</label>
+                <select
+                  {...register('family_relationship')}
+                  className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
+                >
+                  <option value="husband">Marido</option>
+                  <option value="wife">Esposa</option>
+                  <option value="son">Filho</option>
+                  <option value="daughter">Filha</option>
+                  <option value="other">Outro</option>
+                </select>
+              </div>
               <p className="font-body-md text-on-surface-variant italic">
                 {showNewFamily 
                   ? "Um novo grupo familiar será criado e este membro será vinculado como participante."
@@ -312,6 +338,14 @@ export default function NewMemberPage() {
                 <input 
                   type="date"
                   {...register('role_start_date')}
+                  className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
+                />
+              </div>
+              <div className="space-y-xs">
+                <label className="font-label-sm text-on-surface-variant">Data de Fim (opcional)</label>
+                <input 
+                  type="date"
+                  {...register('role_end_date')}
                   className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
                 />
               </div>
