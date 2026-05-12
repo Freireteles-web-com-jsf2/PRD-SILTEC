@@ -59,17 +59,19 @@ export default function NewMemberPage() {
       if (error) throw error;
 
       if (familyGroupId) {
-        await supabase
+        const { error: familyError } = await supabase
           .from('family_members')
           .insert([{ 
             member_id: member.id, 
             family_group_id: familyGroupId,
             relationship: 'membro' 
           }]);
+
+        if (familyError) throw familyError;
       }
 
       if (role) {
-        await supabase
+        const { error: roleError } = await supabase
           .from('member_roles')
           .insert([{
             member_id: member.id,
@@ -77,6 +79,8 @@ export default function NewMemberPage() {
             is_active: true,
             start_date: role_start_date || new Date().toISOString().split('T')[0],
           }]);
+
+        if (roleError) throw roleError;
       }
 
       router.push('/membros');
