@@ -14,11 +14,18 @@
 
 ---
 
-## Active Milestone: v0.3 — Financeiro & API
+## Active Milestone: v0.3 — Módulo Membros Completo
 
-*(Em planejamento)*
+| Fase | Descrição | Status |
+|------|-----------|--------|
+| 1-5 | Schema, RLS, UI, Rebuild | ✓ Complete |
+| **6** | **CRUD tabelas relacionadas (famílias, departamentos, eventos, cargos, presença)** | **Em discussão** |
+
+## Next: v0.4 — Financeiro & API
+
+*(Aguardando v0.3)*
 
 ---
 
-*Last updated: 2026-05-08*
+*Last updated: 2026-05-12*
 *Project: Siltec-Solutions | SGI*
