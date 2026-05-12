@@ -8,14 +8,13 @@ interface UseMembersProps {
   search?: string;
   status?: boolean | 'all';
   departmentId?: string;
-  role?: string;
   page?: number;
   pageSize?: number;
 }
 
 const DEBOUNCE_MS = 400;
 
-export function useMembers({ search, status, departmentId, role, page = 1, pageSize = 50 }: UseMembersProps = {}) {
+export function useMembers({ search, status, departmentId, page = 1, pageSize = 50 }: UseMembersProps = {}) {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -80,7 +79,7 @@ export function useMembers({ search, status, departmentId, role, page = 1, pageS
         setLoading(false);
       }
     }
-  }, [search, status, departmentId, role, page, pageSize]);
+  }, [search, status, departmentId, page, pageSize]);
 
   useEffect(() => {
     mountedRef.current = true;

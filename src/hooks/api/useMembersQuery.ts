@@ -9,7 +9,6 @@ interface UseMembersProps {
   search?: string;
   status?: boolean | 'all';
   departmentId?: string;
-  role?: string;
   page?: number;
   pageSize?: number;
 }
@@ -28,7 +27,6 @@ export function useMembers({
   search = '',
   status = 'all',
   departmentId,
-  role,
   page = 1,
   pageSize = 50
 }: UseMembersProps = {}) {
@@ -80,7 +78,7 @@ export function useMembers({
     };
   };
 
-  const queryKey = ['members', { search, status, departmentId, role, page, pageSize }];
+  const queryKey = ['members', { search, status, departmentId, page, pageSize }];
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey,
