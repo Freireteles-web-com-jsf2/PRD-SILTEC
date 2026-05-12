@@ -10,7 +10,10 @@ export function useMember(id: string) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setLoading(false);
+      return;
+    }
 
     const fetchMember = async () => {
       try {
