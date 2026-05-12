@@ -3,7 +3,7 @@ export type MaritalStatusType = 'single' | 'married' | 'divorced' | 'widowed' | 
 
 export interface Member {
   id: string;
-  church_id: string;
+  church_id?: string;
   name: string;
   birth_date: string | null;
   gender: GenderType | null;
