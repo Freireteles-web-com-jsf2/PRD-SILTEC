@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Member } from '@/types/member';
-import { handleSupabaseError } from '@/lib/errors';
+import { handleSupabaseError, AuthenticationError } from '@/lib/errors';
 
 interface UseMembersProps {
   search?: string;
@@ -187,6 +187,11 @@ export function useDeleteMember() {
  */
 export function useMember(id: string) {
   const fetchMember = async (): Promise<Member> => {
+    const session = await supabase.auth.getSession();
+    if (!session.data.session) {
+      throw new AuthenticationError();
+    }
+
     const { data, error } = await supabase
       .from('members')
       .select(`
