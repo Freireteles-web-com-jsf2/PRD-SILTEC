@@ -67,7 +67,7 @@ export function useMembers({ search, status, departmentId, page = 1, pageSize = 
       if (fetchError) throw fetchError;
       if (mountedRef.current) {
         setMembers(data || []);
-        setTotal(count ?? data?.length ?? 0);
+        setTotal(count ?? 0);
       }
     } catch (err: any) {
       console.error('Erro ao buscar membros:', err);
