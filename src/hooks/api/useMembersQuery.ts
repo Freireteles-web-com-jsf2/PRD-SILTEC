@@ -203,8 +203,7 @@ export function useMember(id: string) {
           family_groups(id, name)
         ),
         member_attendances(
-          id, event_id, status, check_in_time, check_out_time, created_at,
-          events(title, start_date, event_type)
+          id, event_id, status, check_in_time, check_out_time, created_at
         )
       `)
       .eq('id', id)
