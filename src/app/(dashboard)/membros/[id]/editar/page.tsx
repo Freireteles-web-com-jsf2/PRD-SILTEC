@@ -7,7 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { memberSchema, MemberFormData } from '@/types/memberSchema';
 import { useMember, useUpdateMember } from '@/hooks/api/useMembersQuery';
 import { useFamilyGroups } from '@/hooks/api/useFamilyGroups';
-import { supabase } from '@/lib/supabase';
+import { fetchDepartments } from '@/lib/services/departments';
+import { updateFamilyMemberLink, getFamilyMemberByMemberId } from '@/lib/services/family';
+import { Department } from '@/types/member';
+import { familyRelationshipOptions } from '@/types/memberSchema';
 import { Card } from '@/components/ui/Card';
 import { 
   ArrowLeft, 
@@ -17,8 +20,7 @@ import {
   Plus,
   Award,
   Loader2,
-  AlertCircle,
-  Building2
+  AlertCircle
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -27,8 +29,10 @@ export default function EditMemberPage() {
   const { id } = useParams();
   const { member, loading: loadingMember, error: memberError } = useMember(id as string);
   const { groups, createGroup, loading: loadingGroups } = useFamilyGroups();
+  const [departments, setDepartments] = useState<Department[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNewFamily, setShowNewFamily] = useState(false);
+  const updateMember = useUpdateMember();
   const [error, setError] = useState<string | null>(null);
 
   const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm<MemberFormData>({
@@ -64,7 +68,22 @@ export default function EditMemberPage() {
         role_end_date: member.member_roles?.find(r => r.is_active)?.end_date?.split('T')[0] || undefined,
       });
     }
-  }, [member, reset]);
+    }, [member, reset]);
+
+  useEffect(() => {
+    fetchDepartments().then(setDepartments).catch(() => {});
+  }, []);
+
+  const familyRelationshipLabels: Record<string, string> = {
+    husband: 'Marido', wife: 'Esposa', son: 'Filho', daughter: 'Filha',
+    father: 'Pai', mother: 'Mãe', brother: 'Irmão', sister: 'Irmã',
+    grandfather: 'Avô', grandmother: 'Avó', grandson: 'Neto', granddaughter: 'Neta',
+    uncle: 'Tio', aunt: 'Tia', nephew: 'Sobrinho', niece: 'Sobrinha',
+    cousin: 'Primo(a)', father_in_law: 'Sogro', mother_in_law: 'Sogra',
+    brother_in_law: 'Cunhado', sister_in_law: 'Cunhada', son_in_law: 'Genro', daughter_in_law: 'Nora',
+    stepfather: 'Padrasto', stepmother: 'Madrasta', stepson: 'Enteado', stepdaughter: 'Enteada',
+    other: 'Outro',
+  };
 
   const onSubmit = async (data: MemberFormData) => {
     try {
@@ -80,30 +99,19 @@ export default function EditMemberPage() {
 
       const { new_family_group_name, family_group_id, family_relationship, role, role_start_date, role_end_date, ...memberData } = data;
 
-      const { error: updateError } = await supabase
-        .from('members')
-        .update({ ...memberData })
-        .eq('id', id);
-
-      if (updateError) throw updateError;
+      await updateMember.mutateAsync({ id: id as string, data: memberData });
 
       if (familyGroupId) {
-        const { data: existing, error: fetchError } = await supabase
-          .from('family_members')
-          .select('id')
-          .eq('member_id', id)
-          .single();
+        const existing = await getFamilyMemberByMemberId(id as string);
 
-        if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
-
-        if (existing) {
-          const { error: updateError } = await supabase
-            .from('family_members')
-            .update({ family_group_id: familyGroupId, relationship: family_relationship || 'other' })
-            .eq('id', existing.id);
-          if (updateError) throw updateError;
+        if (existing?.id) {
+          await updateFamilyMemberLink(existing.id, {
+            family_group_id: familyGroupId,
+            relationship: family_relationship || 'other',
+          });
         } else {
-          const { error: insertError } = await supabase
+          const { supabase: sb } = await import('@/lib/supabase');
+          const { error: insertError } = await sb
             .from('family_members')
             .insert([{ member_id: id, family_group_id: familyGroupId, relationship: family_relationship || 'other' }]);
           if (insertError) throw insertError;
@@ -112,14 +120,15 @@ export default function EditMemberPage() {
 
       if (role) {
         const activeRole = member?.member_roles?.find(r => r.is_active);
+        const { supabase: sb } = await import('@/lib/supabase');
         if (activeRole) {
-          const { error: roleUpdateError } = await supabase
+          const { error: roleUpdateError } = await sb
             .from('member_roles')
             .update({ role, start_date: role_start_date || activeRole.start_date, end_date: role_end_date || null })
             .eq('id', activeRole.id);
           if (roleUpdateError) throw roleUpdateError;
         } else {
-          const { error: roleInsertError } = await supabase
+          const { error: roleInsertError } = await sb
             .from('member_roles')
             .insert([{
               member_id: id,
@@ -135,7 +144,6 @@ export default function EditMemberPage() {
       router.push(`/membros/${id}`);
     } catch (error: any) {
       const errorMessage = error?.message || error?.error_description || 'Erro desconhecido ao salvar.';
-      console.error('Erro ao atualizar:', errorMessage, error);
       setError(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -308,9 +316,9 @@ export default function EditMemberPage() {
                   className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
                 >
                   <option value="">Nenhum departamento</option>
-                  <option value="admin">Administrativo</option>
-                  <option value="music">Música</option>
-                  <option value="youth">Juventude</option>
+                  {departments.map(d => (
+                    <option key={d.id} value={d.id}>{d.name}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -369,17 +377,10 @@ export default function EditMemberPage() {
                   {...register('family_relationship')}
                   className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
                 >
-                  <option value="husband">Marido</option>
-                  <option value="wife">Esposa</option>
-                  <option value="son">Filho</option>
-                  <option value="daughter">Filha</option>
-                  <option value="father">Pai</option>
-                  <option value="mother">Mãe</option>
-                  <option value="brother">Irmão</option>
-                  <option value="sister">Irmã</option>
-                  <option value="grandfather">Avô</option>
-                  <option value="grandmother">Avó</option>
-                  <option value="other">Outro</option>
+                  <option value="">Selecione</option>
+                  {familyRelationshipOptions.map(rel => (
+                    <option key={rel} value={rel}>{familyRelationshipLabels[rel]}</option>
+                  ))}
                 </select>
               </div>
               <p className="font-body-md text-on-surface-variant italic">

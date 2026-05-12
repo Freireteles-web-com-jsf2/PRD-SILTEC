@@ -1,12 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { memberSchema, MemberFormData } from '@/types/memberSchema';
+import { memberSchema, MemberFormData, familyRelationshipOptions } from '@/types/memberSchema';
 import { useFamilyGroups } from '@/hooks/api/useFamilyGroups';
-import { supabase } from '@/lib/supabase';
+import { useCreateMember } from '@/hooks/api/useMembersQuery';
+import { fetchDepartments } from '@/lib/services/departments';
+import { createFamilyGroup, linkFamilyMember } from '@/lib/services/family';
+import { Department } from '@/types/member';
 import { Card } from '@/components/ui/Card';
 import { 
   ArrowLeft, 
@@ -21,9 +24,15 @@ import Link from 'next/link';
 
 export default function NewMemberPage() {
   const router = useRouter();
-  const { groups, createGroup, loading: loadingGroups } = useFamilyGroups();
+  const { groups, refresh: refreshGroups } = useFamilyGroups();
+  const createMember = useCreateMember();
+  const [departments, setDepartments] = useState<Department[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNewFamily, setShowNewFamily] = useState(false);
+
+  useEffect(() => {
+    fetchDepartments().then(setDepartments).catch(() => {});
+  }, []);
 
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<MemberFormData>({
     resolver: zodResolver(memberSchema),
@@ -34,41 +43,42 @@ export default function NewMemberPage() {
     }
   });
 
+  const familyRelationshipLabels: Record<string, string> = {
+    husband: 'Marido', wife: 'Esposa', son: 'Filho', daughter: 'Filha',
+    father: 'Pai', mother: 'Mãe', brother: 'Irmão', sister: 'Irmã',
+    grandfather: 'Avô', grandmother: 'Avó', grandson: 'Neto', granddaughter: 'Neta',
+    uncle: 'Tio', aunt: 'Tia', nephew: 'Sobrinho', niece: 'Sobrinha',
+    cousin: 'Primo(a)', father_in_law: 'Sogro', mother_in_law: 'Sogra',
+    brother_in_law: 'Cunhado', sister_in_law: 'Cunhada', son_in_law: 'Genro', daughter_in_law: 'Nora',
+    stepfather: 'Padrasto', stepmother: 'Madrasta', stepson: 'Enteado', stepdaughter: 'Enteada',
+    other: 'Outro',
+  };
+
   const onSubmit = async (data: MemberFormData) => {
     try {
       setIsSubmitting(true);
-      
+
       let familyGroupId = data.family_group_id;
-      
-      // Criar novo grupo familiar se solicitado
       if (showNewFamily && data.new_family_group_name) {
-        const newGroup = await createGroup(data.new_family_group_name);
+        const newGroup = await createFamilyGroup(data.new_family_group_name);
         familyGroupId = newGroup.id;
+        await refreshGroups();
       }
 
       const { new_family_group_name, family_group_id, family_relationship, role, role_start_date, role_end_date, ...memberData } = data;
 
-      const { data: member, error } = await supabase
-        .from('members')
-        .insert([{ ...memberData }])
-        .select()
-        .single();
-
-      if (error) throw error;
+      const member = await createMember.mutateAsync(memberData);
 
       if (familyGroupId) {
-        const { error: familyError } = await supabase
-          .from('family_members')
-          .insert([{ 
-            member_id: member.id, 
-            family_group_id: familyGroupId,
-            relationship: family_relationship || 'other',
-          }]);
-
-        if (familyError) throw familyError;
+        await linkFamilyMember({
+          family_group_id: familyGroupId,
+          member_id: member.id,
+          relationship: family_relationship || 'other',
+        });
       }
 
       if (role) {
+        const { supabase } = await import('@/lib/supabase');
         const { error: roleError } = await supabase
           .from('member_roles')
           .insert([{
@@ -78,14 +88,12 @@ export default function NewMemberPage() {
             start_date: role_start_date || new Date().toISOString().split('T')[0],
             end_date: role_end_date || null,
           }]);
-
         if (roleError) throw roleError;
       }
 
       router.push('/membros');
     } catch (error: any) {
       const errorMessage = error?.message || error?.error_description || 'Erro desconhecido ao salvar membro.';
-      console.error('Erro ao salvar:', errorMessage, error);
       alert(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -116,7 +124,6 @@ export default function NewMemberPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-xl">
         <div className="md:col-span-2 space-y-xl">
-          {/* Dados Pessoais */}
           <Card title="Dados Pessoais">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
               <div className="space-y-xs">
@@ -180,7 +187,6 @@ export default function NewMemberPage() {
             </div>
           </Card>
 
-          {/* Endereço */}
           <Card title="Endereço">
             <div className="grid grid-cols-1 md:grid-cols-1 gap-md">
               <div className="space-y-xs">
@@ -211,7 +217,6 @@ export default function NewMemberPage() {
             </div>
           </Card>
 
-          {/* Dados Ministeriais */}
           <Card title="Vida Ministerial">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
               <div className="space-y-xs">
@@ -237,9 +242,9 @@ export default function NewMemberPage() {
                   className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
                 >
                   <option value="">Nenhum departamento</option>
-                  <option value="admin">Administrativo</option>
-                  <option value="music">Música</option>
-                  <option value="youth">Juventude</option>
+                  {departments.map(d => (
+                    <option key={d.id} value={d.id}>{d.name}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -247,7 +252,6 @@ export default function NewMemberPage() {
         </div>
 
         <div className="space-y-xl">
-          {/* Avatar / Foto */}
           <Card title="Foto de Perfil">
             <div className="flex flex-col items-center gap-md py-md">
               <div className="w-32 h-32 rounded-full bg-surface-variant/30 border-2 border-dashed border-outline-variant/50 flex items-center justify-center text-on-surface-variant overflow-hidden relative group">
@@ -260,7 +264,6 @@ export default function NewMemberPage() {
             </div>
           </Card>
 
-          {/* Grupo Familiar */}
           <Card 
             title="Vínculo Familiar"
             headerAction={
@@ -300,11 +303,10 @@ export default function NewMemberPage() {
                   {...register('family_relationship')}
                   className="w-full bg-surface-variant/20 border border-outline-variant/20 rounded-lg px-md py-md text-on-surface focus:border-primary outline-none transition-all"
                 >
-                  <option value="husband">Marido</option>
-                  <option value="wife">Esposa</option>
-                  <option value="son">Filho</option>
-                  <option value="daughter">Filha</option>
-                  <option value="other">Outro</option>
+                  <option value="">Selecione</option>
+                  {familyRelationshipOptions.map(rel => (
+                    <option key={rel} value={rel}>{familyRelationshipLabels[rel]}</option>
+                  ))}
                 </select>
               </div>
               <p className="font-body-md text-on-surface-variant italic">
@@ -315,7 +317,6 @@ export default function NewMemberPage() {
             </div>
           </Card>
 
-          {/* Cargos */}
           <Card title="Cargos Atuais" subtitle="Defina o cargo inicial do membro.">
             <div className="space-y-md">
               <div className="space-y-xs">
@@ -352,7 +353,6 @@ export default function NewMemberPage() {
             </div>
           </Card>
 
-          {/* Status da Conta */}
           <Card title="Status do Registro">
              <div className="flex items-center justify-between">
                 <span className="font-body-md text-on-surface">Cadastro Ativo</span>
