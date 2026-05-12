@@ -26,7 +26,7 @@ export function useMember(id: string) {
             member_timeline(*),
             family_members(
               relationship,
-              family_groups(name)
+              family_groups(id, name)
             )
           `)
           .eq('id', id)

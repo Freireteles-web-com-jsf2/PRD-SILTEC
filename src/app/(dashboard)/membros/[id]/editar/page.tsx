@@ -54,7 +54,7 @@ export default function EditMemberPage() {
         baptism_date: member.baptism_date || '',
         conversion_date: member.conversion_date || '',
         status: member.status,
-        family_group_id: '',
+        family_group_id: member.family_members?.[0]?.family_groups?.id || '',
         new_family_group_name: '',
         role: member.member_roles?.find(r => r.is_active)?.role || '',
         role_start_date: member.member_roles?.find(r => r.is_active)?.start_date?.split('T')[0] || '',
