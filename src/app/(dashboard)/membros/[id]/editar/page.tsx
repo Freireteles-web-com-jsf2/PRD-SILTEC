@@ -84,33 +84,38 @@ export default function EditMemberPage() {
       if (updateError) throw updateError;
 
       if (familyGroupId) {
-        const { data: existing } = await supabase
+        const { data: existing, error: fetchError } = await supabase
           .from('family_members')
           .select('id')
           .eq('member_id', id)
           .single();
 
+        if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
+
         if (existing) {
-          await supabase
+          const { error: updateError } = await supabase
             .from('family_members')
             .update({ family_group_id: familyGroupId })
             .eq('id', existing.id);
+          if (updateError) throw updateError;
         } else {
-          await supabase
+          const { error: insertError } = await supabase
             .from('family_members')
             .insert([{ member_id: id, family_group_id: familyGroupId, relationship: 'membro' }]);
+          if (insertError) throw insertError;
         }
       }
 
       if (role) {
         const activeRole = member?.member_roles?.find(r => r.is_active);
         if (activeRole) {
-          await supabase
+          const { error: roleUpdateError } = await supabase
             .from('member_roles')
             .update({ role, start_date: role_start_date || activeRole.start_date })
             .eq('id', activeRole.id);
+          if (roleUpdateError) throw roleUpdateError;
         } else {
-          await supabase
+          const { error: roleInsertError } = await supabase
             .from('member_roles')
             .insert([{
               member_id: id,
@@ -118,6 +123,7 @@ export default function EditMemberPage() {
               is_active: true,
               start_date: role_start_date || new Date().toISOString().split('T')[0],
             }]);
+          if (roleInsertError) throw roleInsertError;
         }
       }
 
