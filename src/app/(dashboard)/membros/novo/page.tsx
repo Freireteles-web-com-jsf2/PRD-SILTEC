@@ -12,8 +12,6 @@ import {
   ArrowLeft, 
   Save, 
   User, 
-  MapPin, 
-  Church, 
   Users, 
   Plus,
   Award,
